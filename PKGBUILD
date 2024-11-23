@@ -32,6 +32,7 @@ license=(
   AGPL3
 )
 depends=(
+  "eslint-plugin-hardhat-internal-rules"
   "hardhat"
   "libcrash-bash"
   "solidity-analyzer"
