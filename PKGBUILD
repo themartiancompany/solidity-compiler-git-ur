@@ -3,7 +3,8 @@
 # Maintainer:  Truocolo <truocolo@aol.com>
 # Maintainer:  Pellegrino Prevete <pellegrinoprevete@gmail.com>
 
-_node='nodejs'
+_hardhat="true"
+_solc="true"
 _os="$( \
   uname \
     -o)"
@@ -15,7 +16,7 @@ pkgname="${_pkgname}-git"
 pkgver="0.0.0.0.0.0.0.0.0.0.0.0.1".r2.g"17462bf25f990eeb255a2b6831d80e9271d170cd"
 pkgrel=1
 _pkgdesc=(
-  "Solidity compiler."
+  "Solidity compiler supporting various backends."
 )
 pkgdesc="${_pkgdesc[*]}"
 arch=(
@@ -32,14 +33,38 @@ license=(
   AGPL3
 )
 depends=(
-  "hardhat"
   "libcrash-bash"
-  "solidity-analyzer"
 )
-[[ "${_os}" == 'GNU/Linux' ]] && \
+optdepends=()
+if [[ "${_hardhat}" == "true" ]]; then
   depends+=(
-    "eslint-plugin-hardhat-internal-rules"
+    "indent"
+    "solidity-analyzer"
+    "hardhat"
   )
+  if [[ "${_os}" == "GNU/Linux" ]] && \
+     [[ "${_os}" != "Android" ]]; then
+    depends+=(
+      'findutils'
+      'cpio'
+      'eslint-plugin-hardhat-internal-rules'
+      'eslint-plugin-slow-imports'
+    )
+  fi
+elif [[ "${_hardhat}" == "false" ]]; then
+  optdepends+=(
+    "hardhat: hardhat backend support"
+  )
+fi
+if [[ "${_solc}" == "true" ]]; then
+  depends+=(
+    "solidity"
+  )
+elif [[ "${_solc}" == "false" ]]; then
+  optdepends+=(
+    "solidity: solc backend support"
+  )
+fi
 makedepends=(
   make
 )
