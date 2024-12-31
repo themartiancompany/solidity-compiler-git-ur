@@ -66,10 +66,10 @@ elif [[ "${_solc}" == "false" ]]; then
   )
 fi
 makedepends=(
-  make
+  'make'
 )
 checkdepends=(
-  shellcheck
+  'shellcheck'
 )
 optdepends=(
 )
@@ -87,27 +87,28 @@ groups=(
  "${_proj}-git"
 )
 _url="${url}"
-[[ "${_offline}" == true ]] && \
+if [[ "${_offline}" == true ]]; then
   _url="${_local}"
-source=()
+fi
 _branch="master"
-[[ "${_git}" == true ]] && \
+if [[ "${_git}" == true ]]; then
   makedepends+=(
-    git
-  ) && \
-  source+=(
-    "${_pkgname}-${_branch}::git+${_url}#branch=${_branch}"
+    'git'
   )
-[[ "${_git}" == false ]] && \
+  _src="${_pkgname}-${_branch}::git+${_url}#branch=${_branch}"
+elif [[ "${_git}" == false ]]; then
   makedepends+=(
-    curl
-    jq
-  ) && \
-  source+=(
-    "${_pkgname}.tar.gz::${_url}/archive/refs/heads/${_branch}.tar.gz"
+    'curl'
+    'jq'
   )
+  _src="${_pkgname}-${_branch}.tar.gz::${_url}/archive/refs/heads/${_branch}.tar.gz"
+fi
+source=(
+  "${_src}"
+)
+
 sha256sums=(
-  SKIP
+  'SKIP'
 )
 
 _nth() {
